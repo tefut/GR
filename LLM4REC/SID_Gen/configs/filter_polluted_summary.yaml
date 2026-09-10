@@ -1,0 +1,25 @@
+# 内容过滤任务配置
+
+name: "filter_content"
+description: "内容过滤任务配置"
+
+# 文件路径
+input_file: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/test/input1_add_desc_and_comment_all.csv"
+output_file: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/test/input1_add_desc_and_comment_all_polluted.csv"
+
+# 过滤配置
+input_column: "comment_summary"
+filter_function: "is_not_polluted"  # is_not_empty, is_not_polluted, is_length_valid
+filter_mode: "keep_false"  # keep_true: 保留过滤结果为True的行, keep_false: 保留过滤结果为False的行
+
+# 过滤函数参数
+# filter_params:
+#   # is_length_valid 参数
+#   min_length: 1
+#   max_length: 100000
+  
+  # is_not_polluted 参数（使用默认patterns）
+  # patterns: []
+
+# 日志配置
+log_level: "INFO"
