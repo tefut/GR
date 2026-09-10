@@ -1,0 +1,69 @@
+# RQVAE训练任务专配置
+
+name: "train_sid"
+description: "RQVAE训练任务配置，支持rqvae/rqkmeans/rqkmeans_plus/rqkmeans_constrained四种模型"
+
+column_mapping:
+  primary_key: "app_id"
+
+data_type: "npz"
+# 训练配置
+train_sid:
+  # 数和路径
+  data_path: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/sid/game_filter_7d_8k/test/game_emb-qwen3-8b.npz"
+  ckpt_dir: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/sid/game_filter_7d_8k/sid/test/checkpoints"
+  log_file: "train_sid.log"
+  
+  # 数据预处理
+  expected_emb_dim: null  # 期望的embedding维度，为null时不做过滤；设置后丢弃维度不匹配的脏数据
+
+  # 训练参数
+  lr: 0.0003
+  epochs: 2000
+  batch_size: 1024
+  num_workers: 4
+  eval_step: 5
+  learner: "AdamW"
+  lr_scheduler_type: "cosine"
+  warmup_epochs: 50
+  weight_decay: 0.0
+  
+  # 模型参数
+  model_type: "rqvae"  # rqvae | rqkmeans | rqkmeans_plus | rqkmeans_constrained
+  dropout_prob: 0.0
+  bn: false
+  loss_type: "mse"
+  kmeans_init: true
+  kmeans_iters: 100
+  kmeans_tol: 0.0001  # 1e-4, K-Means 收敛容差
+  sk_epsilons: [0.0, 0.0, 0.0]
+  sk_iters: 50
+  num_emb_list: [256, 256, 256]
+  e_dim: 32
+  quant_loss_weight: 1.0
+  beta: 0.25
+  layers: [2048, 1024, 512, 256, 128, 64]
+  
+  # 预训练
+  pretrained_ckpt: ""
+  pretrained_codebook_path: ""  # rqkmeans/rqkmeans_plus/rqkmeans_constrained 模式专用
+  
+  # RQKMeans 专用配置
+  uniform_mapping: false  # 是否启用 Sinkhorn 均匀映射（仅 rqkmeans 模式）
+  uniform_iters: 30       # Sinkhorn 迭代次数
+  uniform_tau: null       # Sinkhorn 正则化参数
+  
+  # 评估输出
+  save_limit: 5
+  eval_dump_root: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/sid/game_filter_7d_8k/sid/test/sid"
+  dump_sids: true
+  dump_sids_format: "json"
+  
+  # 随机种子
+  seed: 2024
+
+# 设备配置
+device: "npu"
+
+# 日志配置
+log_level: "INFO"
