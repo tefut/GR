@@ -1,0 +1,89 @@
+#!/bin/bash
+# Copyright 2026 作者：灵犀
+# 评论摘要生成任务运行脚本
+source /usr/local/Ascend/ascend-toolkit/set_env.sh
+source /usr/local/Ascend/nnal/atb/set_env.sh
+
+pip install transformers accelerate
+pip install pandas
+pip install mistral-common>=1.6.0
+pip install sentencepiece
+export HCCL_CONNECT_TIMEOUT=600
+export HCCL_WHITELIST_DISABLE=1
+
+# 修复：原脚本 ${MA_NUM_GPUS: -1} 是截取字符串语法，应使用 ${var:-default} 设置默认值
+NGPUS_PER_NODE="${MA_NUM_GPUS:-1}"
+echo "[INFO] Using ${NGPUS_PER_NODE} NPUs"
+
+# 获取脚本所在目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+echo "Project Root: $PROJECT_ROOT"
+export PYTHONPATH=$PYTHONPATH:$(dirname "$PROJECT_ROOT")
+
+# ==========================================
+# 🟢 核心修改区：默认配置 + 非空参数覆盖
+# ==========================================
+# 1. 设置默认配置文件路径
+CONFIG_FILE="${PROJECT_ROOT}/configs/llm/comment_summary.yaml"
+
+# 2. 解析命令行参数
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        # 🔹 兼容等号格式：--config=/path/to/config.yaml
+        --config=*)
+            VAL="${1#*=}"
+            if [[ -n "$VAL" ]]; then
+                CONFIG_FILE="$VAL"
+            fi
+            shift
+            ;;
+        # 🔹 兼容空格格式：--config /path/to/config.yaml
+        --config)
+            if [[ $# -ge 2 && -n "$2" ]]; then
+                CONFIG_FILE="$2"
+                shift 2
+            else
+                shift
+            fi
+            ;;
+        *)
+            echo "Warning: 未知参数 '$1'，已忽略。使用默认配置。"
+            shift
+            ;;
+    esac
+done
+# ==========================================
+
+# 自动检测设备
+if python3 -c "import torch; import torch_npu; assert torch.npu.is_available()" 2>/dev/null; then
+    DEVICE="npu"
+    MIXED_PRECISION="fp16"
+elif python3 -c "import torch; assert torch.cuda.is_available()" 2>/dev/null; then
+    DEVICE="cuda"
+    MIXED_PRECISION="fp16"
+else
+    DEVICE="cpu"
+    MIXED_PRECISION="no"
+fi
+
+echo "=========================================="
+echo "Comment Summary Generation Task"
+echo "=========================================="
+echo "Config:   $CONFIG_FILE"
+echo "Device:   $DEVICE"
+echo "=========================================="
+
+cd "$PROJECT_ROOT"
+
+# 运行任务
+accelerate launch \
+    --mixed_precision $MIXED_PRECISION \
+    llm_generation/llm_generate.py \
+    --config "$CONFIG_FILE"
+# 检测上一步执行结果
+if [ $? -ne 0 ]; then
+    echo "步骤执行失败，正在退出..."
+    exit 1
+fi
+echo "Done!"
