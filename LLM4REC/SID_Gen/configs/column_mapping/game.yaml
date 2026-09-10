@@ -1,0 +1,22 @@
+# 游戏业务列名映射配置
+
+primary_key: "app_id"
+columns:
+  # 基础信息
+  id: "app_id"
+  name: "app_cn_name"
+  description: "app_desc"
+  
+  # 分类信息
+  tags: "tags"
+  category_1: "app_first_type"
+  category_2: "app_second_type"
+  category_3: "app_third_type"
+  
+  # 评论相关
+  hot_comments: "hot_comments"
+  mouth_comments: "mouth_comments"
+  
+  # 附加信息
+  active_flg: "active_flg"
+  ctype: "ctype"
