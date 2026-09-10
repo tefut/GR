@@ -1,0 +1,28 @@
+# Copyright 2026 作者犀
+# CSV合并任务配置
+
+# 输入文件列表（逗号分隔）
+input_files: [ "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/test/input1_add_desc_and_comment_all.csv",
+               "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/test/input1_llm_desc.csv",
+               "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/test/input1_add_desc_and_comment_sum.csv",
+               "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/test/input1_add_desc_and_comment_sum_clean.csv"
+]
+input_files_str: ""
+input_columns: [ "_ALL_", "llm_desc", "comment_summary", "comment_summary" ]
+input_columns_str: ""
+
+# 输出文件路径
+output_file: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/test/input1_add_desc_and_comment_sum_fin.csv"
+
+# 合并参数
+# primary_key: 所有文件共同的主键列名
+primary_key: "app_id"
+
+# 各文件要合并的列名（与 input_files 一一对应，逗号分隔）
+
+
+# 合并方式: left, right, outer, inner
+how: "left"
+
+# 日志级别
+log_level: "INFO"
