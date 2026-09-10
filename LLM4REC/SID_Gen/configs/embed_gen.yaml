@@ -1,0 +1,61 @@
+# Embedding生成任务专用配置
+
+name: "embed_gen"
+description: "Embedding生成任务配置"
+
+# 文本生成配置
+text_generation:
+  input_columns:
+    - "app_cn_name"
+    - "ctype"
+    - "tags"
+    - "app_second_type"
+    - "app_third_type"
+    - "app_desc"
+    - "llm_desc"
+  input_columns_desc:
+    - "游戏名"
+    - "应用内容类型"
+    - "游戏标签"
+    - "游戏二级分类"
+    - "游戏三级分类"
+    - "游戏描述"
+    - "游戏描述"
+  attach_desc: true
+  separator: " "
+  empty_placeholder: ""
+
+# 图片射配置
+image_mapping:
+  enabled: true
+  mapping_file: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/id2imgpath.json"
+  base_dir: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/game_icon"
+
+# 模型配置
+model:
+  plm_checkpoint:  "/home/ma-user/work/dataset/qwen3_vl_embedding_2b_weights_jw"
+  plm_name: "qwen"
+  batch_size: 16
+  max_sent_len: 1024
+  pooling: "mean"
+  dtype: "float16"
+  norm_embed: false
+  word_drop_ratio: -1.0
+  enable_multimodal: true
+  multimodal_mode: "text_image"
+
+# 输出配置
+output:
+  input_path: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/qwen3_4b_instruct_weights_jw/game_filter_7d_8k/desc/game_info_with_desc_llm_and_sum.parquet"
+  output_path: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/sid/game_filter_7d_8k/test_vl/game_emb-qwen3-8b.npz"
+  shard_dir: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/sid/game_filter_7d_8k/app_info_with_added_desc.emb-qwen-shards"
+  save_shards: 1
+  log_file: "emb_generate.log"  # 日志文件名，目录自动从output_path派生
+  save_csv: false
+
+# 列名映射
+column_mapping:
+  primary_key: "app_id"
+
+# 日志配置
+log_level: "INFO"
