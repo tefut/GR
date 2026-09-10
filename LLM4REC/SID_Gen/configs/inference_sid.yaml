@@ -1,0 +1,53 @@
+# RQVAE推理任务配置
+
+name: "inference_sid"
+description: "RQVAE推理任务配置"
+
+column_mapping:
+  primary_key: "item_id"
+  embedding_name: "image_embedding"
+
+inference_sid:
+  # 数据和路径
+  norm: false
+  data_type: "npz"
+  csv_sep: ","
+  output_sep: ","
+  data_path: "/path/to/input.npz"
+  pretrained_ckpt: "/path/to/checkpoint_dir"
+  output_file: "/path/to/output_sid.csv"
+  log_file: "inference_sid.log"
+
+  # 推理参数
+  batch_size: 1024
+  num_workers: 4
+
+  # 模型参数（需要与训练时一致）
+  num_emb_list: [128, 128, 128]
+  e_dim: 32
+  layers: [256, 128, 64]
+  dropout_prob: 0.0
+  bn: false
+  loss_type: "mse"
+  kmeans_init: true
+  kmeans_iters: 100
+  sk_epsilons: [0.0, 0.0, 0.0]
+  sk_iters: 50
+  quant_loss_weight: 1.0
+  recon_weight: 1.0
+  beta: 0.25
+
+  # 死码重置
+  enable_dead_code_reset: false
+  reset_threshold: 0.1
+  reset_freq: 50
+  ema_decay: 0.99
+
+  # 随机种子
+  seed: 2024
+
+# 设备配置
+device: "npu"
+
+# 日志配置
+log_level: "INFO"
