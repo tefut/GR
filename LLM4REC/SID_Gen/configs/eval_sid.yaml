@@ -1,0 +1,41 @@
+# Eval SID 配置
+# 功能：评估 SID 生成结果的质量
+
+name: "eval_sid"
+description: "语义ID评估任务"
+
+# 数据输入输出路径配置
+paths:
+  # 基础工作目录
+  base_dir: "/home/ma-user/work/"
+
+  # 输入 parquet 文件
+  input_parquet: "dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/single/3e-4_bs512_ep500_mse_16x_beta025_rw05_111_1n/sid/item_with_sid.parquet"
+
+# 评价参数配置
+eval:
+  # SID 列名
+  sid_col: "sid"
+  name_col: ""
+
+  # 量化深度
+  depth: 3
+
+  # 各层词表大小
+  vocab_sizes:
+    - 128
+    - 128
+    - 128
+
+  # 类目列名列表（可为空）
+  cat_cols: []
+
+# 主键列名
+primary_key: "item_id"
+
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s [%(levelname)s] %(message)s"
+  log_file: ""
