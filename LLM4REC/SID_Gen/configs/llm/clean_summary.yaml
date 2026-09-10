@@ -1,0 +1,43 @@
+# Copyright 2026 作者：灵犀
+# 摘要清洗任务配置
+
+# 基本参数
+input_file: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/test/input1_add_desc_and_comment_sum.csv"
+output_file: "/home/ma-user/work/dataset/game_gr_data_jw/game_item_info/test/input1_add_desc_and_comment_sum_clean.csv"
+model_path: "/home/ma-user/work/dataset/qwen3_4b_instruct_weights_jw"
+aggregate: true
+
+task:
+  name: "clean_summary"
+  input_column: "comment_summary"
+  output_column: "cleaned_summary"
+  primary_key: "app_id"
+  valid_condition: "not_empty"  # not_empty, all
+
+# 预处理函数链（按顺序执行）
+preprocessors:
+  - name: "clean_text"
+    params:
+      keep_punctuation: true
+      # 无需参数
+
+# 生成参数
+generation:
+  max_new_tokens: 1024
+  temperature: 0.7
+  top_p: 0.9
+  do_sample: true
+  log_every_n_steps: 10
+
+# 后处理函数链（按顺序执行）
+postprocessors:
+  - name: "replace_empty"
+    params:
+      keywords:
+        - "EMPTY_CONTENT"
+        - "EMPTY"
+        - "CONTENT"
+
+# Prompt配置文件路径
+system_prompt_file: "prompts/clean_summary/base.txt"
+user_prompt_file: "prompts/clean_summary/user.txt"
