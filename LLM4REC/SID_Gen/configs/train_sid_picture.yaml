@@ -1,0 +1,150 @@
+# RQVAE训练任务专配置
+
+# 单框主题
+name: "train_sid"
+description: "RQVAE训练任务配置"
+
+column_mapping:
+  primary_key: "item_id"
+  embedding_name: "image_embedding"
+
+# 训练配置
+train_sid:
+  # 数和路径
+  norm: false
+  data_type: "npz"
+  csv_sep: ","
+  data_path: "/home/ma-user/work/dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/single/item_origin_embedding_valid.npz"
+  ckpt_dir: "/home/ma-user/work/dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/3e-4_bs512_ep500_mse_16x_beta025_111_1n/checkpoints"
+  log_file: "train_sid.log"
+
+  # 评估输出
+  save_limit: 5
+  eval_dump_root: "/home/ma-user/work/dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/single/3e-4_bs512_ep500_mse_16x_beta025_111_1n/sid"
+  dump_sids: true
+  dump_sids_format: "json"
+  
+  # 训练参数
+  lr: 0.0003
+  epochs: 500
+  batch_size: 512
+  num_workers: 4
+  eval_step: 5
+  learner: "AdamW"
+  lr_scheduler_type: "cosine"
+  warmup_epochs: 25
+  weight_decay: 0.0
+  
+  # 模型参数
+  dropout_prob: 0.0
+  bn: false
+  loss_type: "mse"
+  kmeans_init: true
+  kmeans_iters: 100
+  sk_epsilons: [0.0, 0.0, 0.0]
+  sk_iters: 50
+  num_emb_list: [128, 128, 128]
+  e_dim: 32
+  recon_weight: 1.0
+  quant_loss_weight: 1.0
+  beta: 0.25
+  # layers: [384, 256, 192, 128, 96, 64]
+  layers: [256, 128, 64]
+
+  # 死码重置
+  enable_dead_code_reset: false
+  reset_threshold: 0.1
+  reset_freq: 50
+  ema_decay: 0.99
+  
+  # 预训练
+  pretrained_ckpt: ""
+  
+  # 随机种子
+  seed: 2024
+
+    # WandB 配置
+  use_wandb: true
+  wandb_project: "SID_Gen"
+  wandb_entity: null
+  wandb_tags: ["batch_size", "lr", "epochs"]
+
+# 设备配置
+device: "npu"
+
+# 日志配置
+log_level: "INFO"
+
+# 表盘
+# RQVAE训练任务专配置
+
+# name: "train_sid"
+# description: "RQVAE训练任务配置"
+
+# column_mapping:
+#   primary_key: "item_id"
+#   embedding_name: "image_embedding"
+
+# # 训练配置
+# train_sid:
+#   # 数和路径
+#   norm: true
+#   data_type: "npz"
+#   data_path: "/home/ma-user/work/dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/item_origin_embedding_valid.npz"
+#   ckpt_dir: "/home/ma-user/work/dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/2e-4_bs1024_ep10_mse_16x_norm_dcr01_99_50_1n/checkpoints"
+#   log_file: "train_sid.log"
+
+#   # 评估输出
+#   save_limit: 5
+#   eval_dump_root: "/home/ma-user/work/dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/2e-4_bs1024_ep10_mse_16x_norm_dcr01_99_50_1n/sid"
+#   dump_sids: true
+#   dump_sids_format: "json"
+
+#   # 训练参数
+#   lr: 0.0002
+#   epochs: 10
+#   batch_size: 1024
+#   num_workers: 4
+#   eval_step: 1
+#   learner: "AdamW"
+#   lr_scheduler_type: "cosine"
+#   warmup_epochs: 3
+#   weight_decay: 0.0
+  
+#   # 模型参数
+#   dropout_prob: 0.0
+#   bn: false
+#   loss_type: "mse"
+#   kmeans_init: true
+#   kmeans_iters: 100
+#   sk_epsilons: [0.0, 0.0, 0.0]
+#   sk_iters: 50
+#   num_emb_list: [256, 256, 256]
+#   e_dim: 32
+#   quant_loss_weight: 2
+#   beta: 0.25
+#   layers: [384, 256, 192, 128, 96, 64]
+
+#     # 死码重置
+#   enable_dead_code_reset: true
+#   reset_threshold: 0.1
+#   reset_freq: 50
+#   ema_decay: 0.99
+  
+#   # 预训练
+#   pretrained_ckpt: ""
+  
+#   # 随机种子
+#   seed: 2024
+
+#     # WandB 配置
+#   use_wandb: true
+#   wandb_project: "SID_Gen"
+#   wandb_entity: null
+#   wandb_tags: ["batch_size", "lr", "epochs"]
+
+# # 设备配置
+# device: "npu"
+
+# # 日志配置
+# log_level: "INFO"
