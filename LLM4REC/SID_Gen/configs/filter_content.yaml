@@ -1,0 +1,18 @@
+# 内容过滤任务配置
+
+name: "filter_content"
+description: "内容过滤任务配置"
+quoting: 'none'
+# 文件路径
+input_file: "/home/ma-user/work/dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/item_origin_embedding_info_with_head.csv"
+output_file: "/home/ma-user/work/dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/item_origin_embedding_valid.csv"
+sep: "\u0001"
+input_column: "item_id"
+filter_function: "register_value_filter"
+filter_mode: "keep_true"
+filter_params:
+  filter_columns: ["image_embedding", "pt_model", "new_type"]
+  filter_values: ["NOT_EMPTY&!\\\\N", "DINO_CLIP_WATCH", "表盘"]
+
+# 日志配置
+log_level: "INFO"
