@@ -1,0 +1,22 @@
+# Embedding相似度计算任务配置
+
+# 输入配置
+input:
+  embedding_file: "/home/ma-user/work/dataset/video_exp_train_data_gr_jw/ads_rcm_video_long_text_feature_dm/20260506/video_emb-qwen3-8b.npz"
+  id_name_mapping_file: "/home/ma-user/work/dataset/video_exp_train_data_gr_jw/ads_rcm_video_long_text_feature_dm/20260506/video_item_info_mini_series.csv"
+  primary_key: "video_id"
+  npz_emb_key: "embedding"
+  name_column: "video_name"
+  app_rank_file: ""
+
+# 输出配置
+output:
+  output_csv: "/home/ma-user/work/dataset/video_exp_train_data_gr_jw/ads_rcm_video_long_text_feature_dm/20260506/similarity_result.csv"
+  output_hive_csv: "/home/ma-user/work/dataset/video_exp_train_data_gr_jw/ads_rcm_video_long_text_feature_dm/20260506/similarity_result_hive.csv"
+  top_n: 20
+  visualize_rows: 10
+  hive_top_n: 20
+
+# 计算参数
+chunk_size: 5000
+top_k: 200
