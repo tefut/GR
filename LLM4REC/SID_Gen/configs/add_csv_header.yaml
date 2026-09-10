@@ -1,0 +1,23 @@
+# CSV表头添加任务配置
+
+name: "add_csv_header"
+description: "为CSV文件添加自定义表头"
+
+# 文件路径
+input_file: ""
+output_file: ""
+
+# 自定义表头 (列表)
+header:
+  - a
+  - b
+  - c
+
+# CSV 分隔符
+sep: ","
+
+# CSV 读取/写入 quoting 参数: minimal, none, all, nonnumeric
+quoting: "minimal"
+
+# 日志配置
+log_level: "INFO"
