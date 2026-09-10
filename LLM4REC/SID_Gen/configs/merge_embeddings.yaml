@@ -1,0 +1,54 @@
+# Embedding拼接配置
+# 功能：
+# 1. 加载npz文件中的embedding数据
+# 2. 加载csv/txt文件中的embedding数据
+# 3. 根据primary_key进行映射拼接
+# 4. 支持l2 norm配置
+
+name: "merge_embeddings"
+description: "Embedding拼接预处理"
+
+paths:
+  # 基础工作目录（如果输入路径是相对路径，则基于此目录）
+  base_dir: "/home/ma-user/work/"
+
+  # 输入文件1: npz文件
+  input_npz: "dataset/music_exp_train_data_gr_jw/ads_rcm_music_train_meta_sim_v2_dm/music_emb-qwen3-8b.npz"
+
+  # 输入文件2: csv/txt文件（包含embedding列）
+  input_csv: "dataset/music_exp_train_data_gr_jw/ads_rcm_music_train_meta_sim_v2_dm/music_meta_info.txt"
+
+  # 输出文件: 合并后的embedding数据
+  output_npz: "dataset/music_exp_train_data_gr_jw/ads_rcm_music_train_meta_sim_v2_dm/music_emb_with_lyric_norm-qwen3-8b.npz"
+
+npz:
+  # npz文件中的id字段名
+  id_key: "song_id"
+
+  # npz文件中的embedding字段名
+  embedding_key: "embedding"
+
+csv:
+  # csv文件中的id列名（用于与npz的primary_key匹配）
+  id_column: "song_id"
+
+  # csv文件中的embedding列名（支持多个）
+  embedding_columns:
+    - "lyric_embd"
+
+  # csv文件分隔符（默认逗号）
+  separator: "\x01"
+
+processing:
+  # 拼接前是否对每个部分的embedding做l2 norm
+  norm_before_concat: true
+
+output:
+  # npz输出时的id_key（与npz配置保持一致）
+  id_key: "song_id"
+  # npz输出时的embedding_key（与npz配置保持一致）
+  embedding_key: "embedding"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
