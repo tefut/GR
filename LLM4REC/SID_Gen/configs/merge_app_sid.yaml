@@ -1,0 +1,43 @@
+# Merge App SID 配置
+# 功能：
+# 1. 读取 item2sid.json 映射文件
+# 2. 读取 input_item_info（可选），获取 item 元信息
+# 3. 如果有 input_item_info，读取 show_col 定义的列，合并 sid
+# 4. 如果无 input_item_info，只输出 itemid -> sid 的映射文件
+
+name: "merge_app_sid"
+description: "将 item2sid 映射合并到应用信息"
+
+# 数据输入输出路径配置
+paths:
+  # 基础工作目录
+  base_dir: "/home/ma-user/work/"
+
+  # item2sid 映射文件（必需）
+  input_item2sid: "dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/single/3e-4_bs512_ep500_mse_16x_beta025_rw05_111_1n/sid/item2sid.json"
+
+  # 应用信息文件（可选）
+  # 如果为空，只输出 itemid -> sid 的 parquet 文件
+  input_item_info: ""
+
+  # 输出 parquet 文件
+  output_parquet: "dataset/picture_exp_train_data_gr_jw/picture_embedding_merge/single/3e-4_bs512_ep500_mse_16x_beta025_rw05_111_1n/sid/item_with_sid.parquet"
+
+# 输出列配置
+output:
+  # 要输出的列（从 input_item_info 中读取）
+  # 如果 input_item_info 为空，此配置将被忽略
+  # 列名直接使用实际列名
+  show_col:
+    - "item_id"
+
+  # sid 列名
+  sid_col: "sid"
+
+# 主键列名
+primary_key: "item_id"
+depth: 4
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s [%(levelname)s] %(message)s"
