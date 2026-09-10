@@ -95,7 +95,8 @@ export ASCEND_PROCESS_LOG_PATH=${task_plog_path}
 
 echo "plog path: ${ASCEND_PROCESS_LOG_PATH}"
 
-python -m torch.distributed.launch --nproc_per_node=${NGPUS_PER_NODE} \
+
+torchrun --nproc_per_node=${NGPUS_PER_NODE} \
          --nnodes=${NNODES} \
          --node_rank=${NODE_RANK} \
          --master_addr=${MASTER_ADDR} \
