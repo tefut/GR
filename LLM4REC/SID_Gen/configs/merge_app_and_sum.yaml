@@ -1,0 +1,73 @@
+# Merge App And Sum 配置 - 游戏数据合并与评论预处理
+# 功能：
+# 1. 合并游戏基础信息、描述信息和TapTap评论数据
+# 2. 对合并后的评论数据进行清洗和预处理
+
+name: "merge_app_and_sum"
+description: "游戏数据合并与评论预处理"
+
+# 数据输入输出路径配置
+paths:
+  # 基础工作目录（如果输入路径是相对路径，则基于此目录）
+  base_dir: "/home/ma-user/work/"
+
+  # 输入文件1: 游戏基础信息
+  input_game_base_info: "dataset/game_gr_data_jw/ads_im_game_rec_item_info_dm/game_base_info.txt"
+
+  # 输入文件2: 游戏描述信息
+  input_game_desc: "dataset/game_gr_data_jw/ads_rcm_game_app_info_for_llm_v1_ds/20260329/game_info_llm_desc.txt"
+
+  # 输入文件3: 有效APP ID列表
+  input_valid_app_ids: "dataset/game_gr_data_jw/game_item_info/valid_app_id_with_cnt/app_id_with_count_all.txt"
+
+  # 输入文件4: TapTap信息
+  input_taptap_info: "dataset/game_gr_data_jw/game_item_info/taptap_20260311/taptap_info.txt"
+
+  # 输出文件: 合并并预处理后的完整数据
+  output_merged_data: "dataset/game_gr_data_jw/game_item_info/all/input1_add_desc_and_comment.csv"
+
+# 游戏描述信息列名
+game_desc_column_names:
+  - "app_cn_name"
+  - "app_id"
+  - "package_name"
+  - "tags"
+  - "app_desc"
+  - "developer_cn_name"
+  - "app_second_type"
+  - "app_third_type"
+  - "search_tag1"
+  - "split_package_name"
+  - "on_shelf_time"
+  - "pt_d"
+
+# 数据处理配置
+processing:
+  # 是否清理空列表为NaN
+  clean_empty_lists: true
+
+  # 解析TapTap数据的最大嵌套深度
+  taptap_max_parse_depth: 5
+
+# 评论预处理配置
+preprocess:
+  # 输入列名
+  hot_comments_col: "hot_comments"
+  mouth_comments_col: "mouth_comments"
+
+  # 输出列名
+  output_col: "comments"
+
+  # 最大评论数量
+  max_items: 20
+
+  # 每条评论最大长度
+  max_item_length: 2000
+
+  # JSON中内容字段的键名
+  json_key: "content"
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
